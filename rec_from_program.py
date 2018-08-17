@@ -1,6 +1,15 @@
 import face_recognition
 import cv2
-import os
+
+
+def generateUnknown():
+    uknown = "Unknown"
+    n = ""
+    i = 0
+    while (uknown + n) in known_face_names:
+        i = i + 1
+        n = str(i)
+    return (uknown + n)
 
 # This is a demo of running face recognition on live video from your webcam. It's a little more complicated than the
 # other example, but it includes some basic performance tweaks to make things run a lot faster:
@@ -14,18 +23,18 @@ import os
 # Get a reference to webcam #0 (the default one)
 video_capture = cv2.VideoCapture(0)
 
-known_faces_folder = "/home/felix/workspace/python/face_recognition/known_people/"
-known_faces_pictures = os.listdir(known_faces_folder)
+#known_faces_folder = "/home/felix/workspace/python/face_recognition/known_people/"
+#known_faces_pictures = os.listdir(known_faces_folder)
 
 # Create arrays of known face encodings and their names
 known_face_encodings = []
 known_face_names = []
 
-for pic in known_faces_pictures:
-    image = face_recognition.load_image_file(known_faces_folder + pic)
-    face_encoding = face_recognition.face_encodings(image)[0]
-    known_face_encodings.append(face_encoding)
-    known_face_names.append(os.path.splitext(pic)[0])
+#for pic in known_faces_pictures:
+#    image = face_recognition.load_image_file(known_faces_folder + pic)
+#    face_encoding = face_recognition.face_encodings(image)[0]
+#    known_face_encodings.append(face_encoding)
+#    known_face_names.append(os.path.splitext(pic)[0])
 
 
 # Initialize some variables
@@ -54,13 +63,16 @@ while True:
         for face_encoding in face_encodings:
             # See if the face is a match for the known face(s)
             matches = face_recognition.compare_faces(known_face_encodings, face_encoding)
-            name = "Unknown"
+            name = ""
 
             # If a match was found in known_face_encodings, just use the first one.
             if True in matches:
                 first_match_index = matches.index(True)
                 name = known_face_names[first_match_index]
-            
+            else:
+                name = generateUnknown()
+                known_face_encodings.append(face_encoding)
+                known_face_names.append(name)
 
             face_names.append(name)
 
