@@ -1,6 +1,7 @@
 import tkinter
 from tkinter import *
 from tkinter import ttk
+from face_data import FaceData
 
 class Ui:
 
@@ -12,10 +13,14 @@ class Ui:
         self.listbox.pack()
 
 
-    def setList(self, list): #TODO besser machen (nur updates)
-        self.listbox.delete(0, END) #clear
-        for item in list:
-            self.listbox.insert(END, item)
+    def setList(self, fd): #TODO besser machen (nur updates)
+        fd.updateListBox(self.listbox)
+        #self.listbox.get(0, END)
+        #self.listbox.delete(0, END) #clear
+        #for item in list:
+            #if item in self.listbox
+
+        #    self.listbox.insert(END, item)
 
     def startLoop(self):
         self.root.mainloop()

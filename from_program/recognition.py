@@ -1,5 +1,6 @@
 import face_recognition
 import cv2
+from face_data import FaceData
 
 class Recognition:
 
@@ -21,7 +22,7 @@ class Recognition:
             n = str(i)
         return (uknown + n)
 
-    def find_faces(self, known_face_encodings, known_face_names):
+    def find_faces(self, fd):
         # Grab a single frame of video
         ret, frame = self.video_capture.read()
         frame = cv2.flip( frame, 1 ) #mirror view
@@ -41,17 +42,17 @@ class Recognition:
             self.face_names = []
             for face_encoding in self.face_encodings:
                 # See if the face is a match for the known face(s)
-                matches = face_recognition.compare_faces(known_face_encodings, face_encoding)
+                matches = face_recognition.compare_faces(fd.getKnownFaceEncodings(), face_encoding)
                 name = ""
 
                 # If a match was found in known_face_encodings, just use the first one.
                 if True in matches:
                     first_match_index = matches.index(True)
-                    name = known_face_names[first_match_index]
+                    name = fd.getMatchedFaceName(first_match_index)
                 else:
-                    name = self.generateUnknown(known_face_names)
-                    known_face_encodings.append(face_encoding)
-                    known_face_names.append(name)
+                    name = self.generateUnknown(fd.getKnownFaceNames())
+                    fd.addNewFace(face_encoding, name)
+
 
                 self.face_names.append(name)
 
