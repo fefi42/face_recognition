@@ -5,7 +5,10 @@ from face_data import FaceData
 
 class Ui:
 
-    def __init__(self, root):
+    def __init__(self, root, faceData):
+
+        self.faceData = faceData
+
         self.root = root
         self.root.title("Known names")
 
@@ -22,8 +25,8 @@ class Ui:
         self.status.pack(side=BOTTOM, fill=X)
 
 
-    def setList(self, fd): #TODO besser machen (nur updates)
-        fd.updateListBox(self.listbox)
+    def updateList(self):
+        self.faceData.updateListBox(self.listbox)
         #self.listbox.get(0, END)
         #self.listbox.delete(0, END) #clear
         #for item in list:
@@ -58,6 +61,7 @@ class Ui:
     def renameItem(self):
         self.listbox.delete(self.idSelectedForRenaming)
         self.listbox.insert(self.idSelectedForRenaming, self.popupEntry.get())
+
         self.popup.destroy()
 
 #listbox.insert(END, "a list entry")

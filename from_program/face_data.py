@@ -8,63 +8,65 @@ class FaceData:
     TIME_TO_LIVE = 50
     SEEN_ACCEPTENCE_THRESHOLD = 15
 
+    KNOWN_FACE_ENCODINGS = 0    #from face recognition
+    KNOWN_FACE_NAMES = 1        #from face recognition (including unnamed)
+    TTL = 2                     #time to live
+    SEEN = 3                    #seen counter
+    SHOW_IN_UI = 4               #Names shown in UI
+
+
     def __init__(self):
-        #TODO in matrix umändern damit ids garantiert immer gleich sind
-        self.known_face_encodings = [] #from registring
-        self.known_face_names = [] #from registring
+        row, col = 0, 5
+        self.data = [[0 for x in range(row)] for y in range(col)] #create the data matrix
 
-        #to exclude oneframe vectors that look like other persons but are actually the same
-        #we introduce a time to live and a seen counter
-        #if the seen counter is not high enough after the ttl is 0 the vector will be deleted
-        self.ttl = [] #time to life (registering)
-        self.seen = [] #how often it has been seen (registering)
-
-        self.ui_names = [] # visible
 
     def getKnownFaceEncodings(self):
-        return self.known_face_encodings
+        return self.data[FaceData.KNOWN_FACE_ENCODINGS]
 
     def getKnownFaceNames(self):
-        return self.known_face_names
+        return self.data[FaceData.KNOWN_FACE_NAMES]
 
     def getMatchedFaceName(self, index):
-        if self.seen[index] < FaceData.SEEN_ACCEPTENCE_THRESHOLD:
-            self.seen[index] = self.seen[index] + 1
-        return self.known_face_names[index]
+        if self.data[FaceData.SEEN][index] < FaceData.SEEN_ACCEPTENCE_THRESHOLD:
+            self.data[FaceData.SEEN][index] = self.data[FaceData.SEEN][index] + 1
+        return self.data[FaceData.KNOWN_FACE_NAMES][index]
 
     def addNewFace(self, face_encoding, face_name):
-        self.known_face_encodings.append(face_encoding)
-        self.known_face_names.append(face_name)
-        self.ttl.append(FaceData.TIME_TO_LIVE)
-        self.seen.append(0)
-
+        self.data[FaceData.KNOWN_FACE_ENCODINGS].append(face_encoding)
+        self.data[FaceData.KNOWN_FACE_NAMES].append(face_name)
+        self.data[FaceData.TTL].append(FaceData.TIME_TO_LIVE)
+        self.data[FaceData.SEEN].append(0)
+        self.data[FaceData.SHOW_IN_UI].append(False)
 
     def updateListBox(self, listbox):
-        #print("Names \t:" + str(self.known_face_names))
-        #print("TTL \t" + str(self.ttl))
-        #print("seen \t:" + str(self.seen))
+        #print("Names \t:" + str(self.data[FaceData.KNOWN_FACE_NAMES]))
+        #print("TTL \t" + str(self.data[FaceData.TTL]))
+        #print("seen \t:" + str(self.data[FaceData.SEEN]))
 
         indices_for_deletion = []
+        indices_for_ui = []
 
-        for n, i in enumerate(self.ttl): #reduce ttl
+        for n, i in enumerate(self.data[FaceData.TTL]): #reduce ttl
             if i > -1:
-                self.ttl[n] = i -1
-            if self.ttl[n] == 0 and self.seen[n] < FaceData.SEEN_ACCEPTENCE_THRESHOLD:
+                self.data[FaceData.TTL][n] = i -1
+            if self.data[FaceData.TTL][n] == 0 and self.data[FaceData.SEEN][n] < FaceData.SEEN_ACCEPTENCE_THRESHOLD:
                 #print("it is 0 and gets deleted")
                 #the face has not been seen for more than 25 frames and is not important
                 indices_for_deletion.append(n) #save indice for delete
-            if self.ttl[n] == 0 and self.seen[n] >= FaceData.SEEN_ACCEPTENCE_THRESHOLD:
+            if self.data[FaceData.TTL][n] == 0 and self.data[FaceData.SEEN][n] >= FaceData.SEEN_ACCEPTENCE_THRESHOLD:
                 #print("it is 0 and stays")
                 #the face has been seen for more frames and should be shown as name
-                self.ui_names.append(self.known_face_names[n])
+                self.data[FaceData.SHOW_IN_UI][n] = True
+                indices_for_ui.append(n)
 
         while len(indices_for_deletion) > 0:
             #remove all the faces that are not important
             delete_index = indices_for_deletion.pop()
-            self.known_face_names.pop(delete_index)
-            self.known_face_encodings.pop(delete_index)
-            self.ttl.pop(delete_index)
-            self.seen.pop(delete_index)
+            self.data[FaceData.KNOWN_FACE_NAMES].pop(delete_index)
+            self.data[FaceData.KNOWN_FACE_ENCODINGS].pop(delete_index)
+            self.data[FaceData.TTL].pop(delete_index)
+            self.data[FaceData.SEEN].pop(delete_index)
+            self.data[FaceData.SHOW_IN_UI].pop(delete_index)
 
-        while listbox.size() < len(self.ui_names):
-            listbox.insert(END, self.ui_names[listbox.size()])
+        for i in indices_for_ui:
+            listbox.insert(END, self.data[FaceData.KNOWN_FACE_NAMES][i])

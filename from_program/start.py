@@ -15,13 +15,13 @@ def main():
     rec = Recognition()
 
     root = Tk()
-    ui = Ui(root)
+    ui = Ui(root, fd)
 
     def task():
         #while True:
         #print("length: "+ str(len(known_face_names)))
         rec.find_faces(fd)
-        ui.setList(fd)
+        ui.updateList()
 
         ## TODO:  Hit 'q' on the keyboard to quit!
         if cv2.waitKey(1) & 0xFF == ord('q'):
