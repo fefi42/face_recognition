@@ -70,3 +70,13 @@ class FaceData:
 
         for i in indices_for_ui:
             listbox.insert(END, self.data[FaceData.KNOWN_FACE_NAMES][i])
+
+    def renameKnownFace(self, id, newName):
+        shownIdCounter = -1;
+        for n, i in enumerate(self.data[FaceData.SHOW_IN_UI]):
+            if i:
+                #Only count showen names because some names may not be shown in ui
+                shownIdCounter = shownIdCounter + 1
+                if shownIdCounter == id:
+                    #the right row has been found
+                    self.data[FaceData.KNOWN_FACE_NAMES][n] = newName

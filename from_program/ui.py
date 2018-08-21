@@ -61,8 +61,9 @@ class Ui:
     def renameItem(self):
         self.listbox.delete(self.idSelectedForRenaming)
         self.listbox.insert(self.idSelectedForRenaming, self.popupEntry.get())
-
+        self.faceData.renameKnownFace(self.idSelectedForRenaming, self.popupEntry.get())
         self.popup.destroy()
+        self.statusText.set("Item renamed")
 
 #listbox.insert(END, "a list entry")
 
