@@ -39,9 +39,9 @@ class FaceData:
 
 
     def updateListBox(self, listbox):
-        print("Names \t:" + str(self.known_face_names))
-        print("TTL \t" + str(self.ttl))
-        print("seen \t:" + str(self.seen))
+        #print("Names \t:" + str(self.known_face_names))
+        #print("TTL \t" + str(self.ttl))
+        #print("seen \t:" + str(self.seen))
 
         indices_for_deletion = []
 
@@ -49,11 +49,11 @@ class FaceData:
             if i > -1:
                 self.ttl[n] = i -1
             if self.ttl[n] == 0 and self.seen[n] < FaceData.SEEN_ACCEPTENCE_THRESHOLD:
-                print("it is 0 and gets deleted")
+                #print("it is 0 and gets deleted")
                 #the face has not been seen for more than 25 frames and is not important
                 indices_for_deletion.append(n) #save indice for delete
             if self.ttl[n] == 0 and self.seen[n] >= FaceData.SEEN_ACCEPTENCE_THRESHOLD:
-                print("it is 0 and stays")
+                #print("it is 0 and stays")
                 #the face has been seen for more frames and should be shown as name
                 self.ui_names.append(self.known_face_names[n])
 

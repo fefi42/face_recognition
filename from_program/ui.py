@@ -12,6 +12,9 @@ class Ui:
         self.listbox = Listbox(self.root)
         self.listbox.pack()
 
+        self.rename = Button(self.root, text="Rename", command=self.renamePopup)
+        self.rename.pack()
+
 
     def setList(self, fd): #TODO besser machen (nur updates)
         fd.updateListBox(self.listbox)
@@ -24,6 +27,20 @@ class Ui:
 
     def startLoop(self):
         self.root.mainloop()
+
+    def renamePopup(self):
+        popup = Toplevel()
+        popup.title("Rename")
+
+        label = Label(popup, text="New name:")
+        label.grid(row=0, column=0)
+
+        entry = Entry(popup)
+        entry.grid(row=0, column=1)
+
+        button = Button(popup, text="OK", command=popup.destroy)
+        button.grid(row=0, column=2)
+
 
 #listbox.insert(END, "a list entry")
 
