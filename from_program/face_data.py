@@ -9,6 +9,7 @@ class FaceData:
     SEEN_ACCEPTENCE_THRESHOLD = 15
 
     def __init__(self):
+        #TODO in matrix umändern damit ids garantiert immer gleich sind
         self.known_face_encodings = [] #from registring
         self.known_face_names = [] #from registring
 

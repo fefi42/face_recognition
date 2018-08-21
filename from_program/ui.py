@@ -12,8 +12,14 @@ class Ui:
         self.listbox = Listbox(self.root)
         self.listbox.pack()
 
-        self.rename = Button(self.root, text="Rename", command=self.renamePopup)
+        self.rename = Button(self.root, text="Rename", command=self.openRenamePopup)
         self.rename.pack()
+
+        #Status bar
+        self.statusText = StringVar()
+        self.statusText.set("started and running")
+        self.status = Label(self.root, textvariable=self.statusText, bd=1, relief=SUNKEN, anchor=W)
+        self.status.pack(side=BOTTOM, fill=X)
 
 
     def setList(self, fd): #TODO besser machen (nur updates)
@@ -28,19 +34,31 @@ class Ui:
     def startLoop(self):
         self.root.mainloop()
 
-    def renamePopup(self):
-        popup = Toplevel()
-        popup.title("Rename")
+    def openRenamePopup(self):
+        selectedItems = self.listbox.curselection()
+        if len(selectedItems) == 0:
+            #inform user that there is nothing selected
+            self.statusText.set("No item selected")
+            return
 
-        label = Label(popup, text="New name:")
-        label.grid(row=0, column=0)
+        self.popup = Toplevel()
+        self.popup.title("Rename")
 
-        entry = Entry(popup)
-        entry.grid(row=0, column=1)
+        popupLabel = Label(self.popup, text="New name:")
+        popupLabel.grid(row=0, column=0)
 
-        button = Button(popup, text="OK", command=popup.destroy)
-        button.grid(row=0, column=2)
+        self.popupEntry = Entry(self.popup)
+        self.popupEntry.grid(row=0, column=1)
 
+        popupButton = Button(self.popup, text="OK", command=self.renameItem)
+        popupButton.grid(row=0, column=2)
+
+        self.idSelectedForRenaming = selectedItems[0]
+
+    def renameItem(self):
+        self.listbox.delete(self.idSelectedForRenaming)
+        self.listbox.insert(self.idSelectedForRenaming, self.popupEntry.get())
+        self.popup.destroy()
 
 #listbox.insert(END, "a list entry")
 

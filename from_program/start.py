@@ -7,12 +7,6 @@ import tkinter
 from tkinter import *
 from tkinter import ttk
 
-## TODO:
-# -TTL for names
-# -ability to change names
-# -only show unnamed after it has been in multiple frames
-
-
 def main():
 
     #Datastructure for faces and names
